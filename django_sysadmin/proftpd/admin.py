@@ -23,8 +23,8 @@ class FTPUserForm(forms.ModelForm):
     class Meta:
         model = FTPUser
         widgets = {
-        'password': forms.PasswordInput(),
-    }
+            'password': forms.PasswordInput(render_value = True),
+        }
 
 class FTPUserAdmin(admin.ModelAdmin):
     form = FTPUserForm
