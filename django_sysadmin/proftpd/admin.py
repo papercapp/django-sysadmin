@@ -1,9 +1,17 @@
 from django_sysadmin.proftpd import models
 
 from django.contrib import admin
+from django.contrib.auth.hashers import make_password
 from django import forms
+from django.conf import settings
 
 from models import FTPUser
+
+FTP_PASSWORD_HASHER = getattr(settings, "FTP_PASSWORD_HASHER", "sha1")
+FTP_PASSWORD_SALT_FILE = getattr(settings, "FTP_PASSWORD_SALT_FILE", None)
+
+assert(bool(FTP_PASSWORD_SALT_FILE) == True)
+
 
 
 ### actions
@@ -25,6 +33,18 @@ class FTPUserForm(forms.ModelForm):
         widgets = {
             'password': forms.PasswordInput(render_value = True),
         }
+
+    def clean_password(self):
+        passwd = self.cleaned_data.get("password")
+        old_pwd = self.instance.password
+        print passwd, old_pwd
+        if passwd != old_pwd:
+            salt = open(FTP_PASSWORD_SALT_FILE).readline()
+            print salt
+            passwd = make_password(passwd, salt, FTP_PASSWORD_HASHER)
+            print passwd
+        return passwd
+
 
 class FTPUserAdmin(admin.ModelAdmin):
     form = FTPUserForm
