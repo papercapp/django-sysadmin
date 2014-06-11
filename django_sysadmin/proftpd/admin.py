@@ -15,7 +15,16 @@ def setinactive(modeladmin, request, queryset):
 
 ## admin objects
 
+
+class FTPUserForm(forms.ModelForm):
+    class Meta:
+        model = FTPUser
+        widgets = {
+        'password': forms.PasswordInput(),
+    }
+
 class FTPUserAdmin(admin.ModelAdmin):
+    form = FTPUserForm
     list_display = ('username', 'homedir', 'uid', 'gid', 'active', 'created', 'comment')
     list_filter = ('active', 'created' )
     search_fields = ['usernme', 'comment']
