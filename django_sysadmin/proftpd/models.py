@@ -1,10 +1,21 @@
 import os
 from django.db import models
 from django.conf import settings
+from django import forms
 
 FTP_DEFAULT_UID = getattr(settings, "FTP_DEFAULT_UID", 1000)
 FTP_DEFAULT_GID = getattr(settings, "FTP_DEFAULT_GID", 1000)
 FTP_DEFAULT_HOMEDIR_BASE = getattr(settings, "FTP_DEFAULT_HOMEDIR_BASE", "/home")
+
+class PasswordField(forms.CharField):
+    widget = forms.PasswordInput
+
+class PasswordModelField(models.CharField):
+
+    def formfield(self, **kwargs):
+        defaults = {'form_class': PasswordField}
+        defaults.update(kwargs)
+        return super(PasswordModelField, self).formfield(**defaults)
 
 class FTPUser(models.Model):
     """
@@ -15,7 +26,7 @@ class FTPUser(models.Model):
     """
 
     username = models.CharField(max_length=255, unique=True, db_index=True)
-    password = models.CharField(max_length=255, db_index=True)
+    password = PasswordModelField(max_length=255, db_index=True)
 
     ## unix user info
     uid = models.IntegerField(default=FTP_DEFAULT_UID)
