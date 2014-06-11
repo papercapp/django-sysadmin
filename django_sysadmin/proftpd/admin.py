@@ -3,6 +3,8 @@ from django_sysadmin.proftpd import models
 from django.contrib import admin
 from django import forms
 
+from models import FTPUser
+
 
 ### actions
 
