@@ -1,7 +1,6 @@
 import os
 from django.db import models
 from django.conf import settings
-from django import forms
 
 FTP_DEFAULT_UID = getattr(settings, "FTP_DEFAULT_UID", 1000)
 FTP_DEFAULT_GID = getattr(settings, "FTP_DEFAULT_GID", 1000)
