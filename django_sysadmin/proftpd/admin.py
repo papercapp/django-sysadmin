@@ -26,7 +26,6 @@ def setinactive(modeladmin, request, queryset):
 
 ## admin objects
 
-
 class FTPUserForm(forms.ModelForm):
     class Meta:
         model = FTPUser
@@ -37,12 +36,10 @@ class FTPUserForm(forms.ModelForm):
     def clean_password(self):
         passwd = self.cleaned_data.get("password")
         old_pwd = self.instance.password
-        print passwd, old_pwd
         if passwd != old_pwd:
             salt = open(FTP_PASSWORD_SALT_FILE).readline()
-            print salt
             passwd = make_password(passwd, salt, FTP_PASSWORD_HASHER)
-            print passwd
+
         return passwd
 
 
