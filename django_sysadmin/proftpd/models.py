@@ -1,5 +1,10 @@
+import os
 from django.db import models
+from django.conf import settings
 
+FTP_DEFAULT_UID = getattr(settings, "FTP_DEFAULT_UID", 1000)
+FTP_DEFAULT_GID = getattr(settings, "FTP_DEFAULT_GID", 1000)
+FTP_DEFAULT_HOMEDIR_BASE = getattr(settings, "FTP_DEFAULT_HOMEDIR_BASE", "/home")
 
 class FTPUser(models.Model):
     """
@@ -13,11 +18,11 @@ class FTPUser(models.Model):
     password = models.CharField(max_length=255, db_index=True)
 
     ## unix user info
-    uid = models.IntegerField()
-    gid = models.IntegerField()
+    uid = models.IntegerField(default=FTP_DEFAULT_UID)
+    gid = models.IntegerField(default=FTP_DEFAULT_GID)
 
-    homedir = models.CharField(max_length=255)
-    shell = models.CharField(max_length=255)
+    homedir = models.CharField(max_length=255, blank=True)
+    shell = models.CharField(max_length=255, default="/bin/false")
 
     #optional comment
     comment = models.CharField(max_length=255, null=True, blank=True)
@@ -29,6 +34,11 @@ class FTPUser(models.Model):
     class Meta:
         db_table = 'ftp_users'
         verbose_name = 'FTP user'
+
+    def save(self, *args, **kwargs):
+        if not self.homedir:
+            self.homedir = os.path.join(FTP_DEFAULT_HOMEDIR_BASE, self.username)
+        super(FTPUser, self).save(*args, **kwargs)
 
 
 ## possible todo: default uid/guid/homedir/shell in settings.py?
