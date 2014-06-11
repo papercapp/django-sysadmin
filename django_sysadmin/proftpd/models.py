@@ -21,7 +21,7 @@ class FTPUser(models.Model):
     uid = models.IntegerField(default=FTP_DEFAULT_UID)
     gid = models.IntegerField(default=FTP_DEFAULT_GID)
 
-    homedir = models.CharField(max_length=255, blank=True)
+    homedir = models.CharField(max_length=255, blank=True, help_text=u"Default: %s" % os.path.join(FTP_DEFAULT_HOMEDIR_BASE, "username"))
     shell = models.CharField(max_length=255, default="/bin/false")
 
     #optional comment
