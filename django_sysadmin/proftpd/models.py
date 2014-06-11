@@ -16,7 +16,7 @@ class FTPUser(models.Model):
     """
 
     username = models.CharField(max_length=255, unique=True, db_index=True)
-    password = PasswordModelField(max_length=255, db_index=True)
+    password = models.CharField(max_length=255, db_index=True)
 
     ## unix user info
     uid = models.IntegerField(default=FTP_DEFAULT_UID)
