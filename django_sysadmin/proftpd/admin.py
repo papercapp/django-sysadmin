@@ -47,7 +47,7 @@ class FTPUserAdmin(admin.ModelAdmin):
     form = FTPUserForm
     list_display = ('username', 'homedir', 'uid', 'gid', 'active', 'created', 'comment')
     list_filter = ('active', 'created' )
-    search_fields = ['usernme', 'comment']
+    search_fields = ['username', 'comment']
     actions = [setactive, setinactive]
 
 
